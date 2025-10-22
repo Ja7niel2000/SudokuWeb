@@ -1,0 +1,183 @@
+:root{
+    /* COLORES CUADRICULA */
+    --color-innactive:#444141;
+
+    --color-cuadroG:#01ffe6;
+    --color-cuadroC:#000000;
+    --color-Cuadricula:#242424;
+
+    --color-border1:#42857f;
+    --color-border1:#01ffe6;
+
+    --color-active:#01ffe6;
+    --color-bg:#2f2f2f;
+    /* #5d1717 */
+    --color-bg-menu:#0b111a;
+    --color-menu-card:#1a2534;
+    --color-menu-card:#0b111a;
+
+    --color-bg-menu-hover:#1a2e4c;
+
+    --color-font:#fff;
+    --color-shadow:#000;
+}
+
+.menu{
+    display: flex;
+    transition: 0.5s;
+    position: fixed;
+    top:-100%;
+    background: var(--color-bg-menu);
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+}
+
+#playB1{
+    cursor: pointer;
+}
+
+.card{
+    background-color: var(--color-menu-card);
+    margin:auto;
+    border:1px solid var(--color-border1);
+    padding:20px 50px;
+    border-radius:10px;
+    color: var(--color-font);
+    text-align: center;
+}
+
+.subtitle div{
+    margin: 10px 0;
+    padding:10px 0;
+    
+}
+
+.subtitle div:hover{
+    background-color:var(--color-bg-menu-hover) ;
+}
+
+body{
+    background-color: var(--color-bg);
+    min-height: 100vh;
+    display: flex;
+}
+
+.visible{
+    transform: translateY(100%);
+}
+
+.container{
+    position:relative;
+    z-index: 1;
+    height: 495px;
+    width: 495px;
+    background-color:var(--color-Cuadricula);
+    margin: auto;
+
+}
+
+.main{
+    box-shadow: 10px 3px 17px 1px var(--color-shadow);
+    border: 1px solid var(--color-shadow);
+    background-color: var(--color-Cuadricula);
+    justify-self: center;
+    align-items: center;
+    display: grid;
+    grid-template-rows:1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    color: var(--color-font);
+}
+
+main:hover{
+    transform: scale(1.01);
+    transition:  0.1s;
+}
+
+.rows{
+    display: grid;
+    grid-template-columns:repeat(9,1fr);
+    text-align: center;
+    height: 100%;
+    border-bottom: 1px solid var(--color-shadow);
+    border-right: 1px solid var(--color-shadow);
+    
+}
+
+.columns{
+    display: block;
+    background-color: var(--color-Cuadricula);
+}
+
+#controls{
+    margin-top: 25px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+}
+
+#timer{
+    color:var(--color-font);
+    
+}
+
+.peses:hover{
+    transform: scale(1.5);
+    transition: 0.01s;
+    cursor: pointer;
+    
+}
+
+.peses{
+    font-size:1.4rem;
+    margin: 0;
+    padding: 14px;
+    text-align: center;
+    background-color: var(--color-Cuadricula);
+}
+
+.selected{
+    transform: scale(1.5);
+    color:var(--color-active);
+    animation-name: activo;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    background-color: #00000000 !important;
+}
+
+.bloqued{
+    cursor: default !important;
+    background-color: var(--color-innactive);
+}
+
+@keyframes activo{
+    0%{
+        transform: scale(1.5);
+    }
+    50%{
+        transform: scale(1);
+    }
+    
+}
+.border-rigth{
+    border-right:1px solid var(--color-cuadroG) !important;
+}
+.border-bottom{
+    border-bottom:1px solid var(--color-cuadroG) !important;
+}
+.danger{
+    background-color: #f00;
+}
+.warning{
+    background-color: bisque;
+}
+
+.hidden{
+    cursor:default;
+    left:100px;
+    position:absolute;
+    height: 100%;
+    opacity: 0;
+    z-index: -1;
+
+}

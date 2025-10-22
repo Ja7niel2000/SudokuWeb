@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Sudoku</title>
+</head>
+<div id="menuP" class="menu ">
+    <div class="card">
+        <h1 class="title">SUDOKU</h1>
+        <div class="subtitle">
+            <div class="menuB" id="playB1">Jugar</div>
+            <div>Instrucciones</div>
+        </div>
+    </div>
+
+</div>
+<body>
+
+    <div class="container">
+
+        <input class="hidden" id="hiddenInput">
+        <main class="main" id="main">
+            
+        </main>
+
+        <div id="controls">
+            <div><button class="menuB" id="playB2" >Menu</button></div>
+            <div><button id="genera">Start</button></div>
+             <div id="timer">
+                00:00:00
+            </div>
+            <div><button id="verificar">Verificar</button></div>
+        </div>
+    </div>
+    
+</body>
+<script src="timer.js"></script>
+
+<script src="UI.js"></script>
+<script src="events.js"></script>
+<script src="storage.js"></script>
+<script src="game.js"></script>
+
+<script src="app.js"></script>
+
+
+</html>
