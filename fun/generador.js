@@ -1,92 +1,7 @@
-class Game{
-    constructor(){
-        
-        
-
-    }
-}
-
-const KEY="sudoku"
-let sudoku=[
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-]
-
-let placeholder=[
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-]
-
-let userInput=[
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-]
-
-function limpiaSudokus(ref){
-    for(let i=0;i<9;i++)
-        ref[i]=ref[i].map(x => x=0 )
-}
-let timer = new Cronometro("timer");
-
-function generaNuevoJuego(){
-    if(enJuego){
-        if(!confirm("Quieres reiniciar?"))
-            return
-        clearStorage();
-    }
-
-
-    limpiaEstilosPeses();
-    enJuego=true;
-    let message="Ya hay un sudoku en progreso, quieres continuar con el antiguo?"
-    if(localStorage.getItem(KEY)!=null && confirm(message)){
-        load();
-        actualizaValoresUI(userInput);
-        actualizaValoresUI(placeholder,true);
-        timer.start();
-
-        return false;
-    }
-    
-    limpiaSudokus(sudoku);
-    limpiaSudokus(userInput);
-    limpiaSudokus(placeholder);
-    
-    sudoku = generaSudoku();
-    generaPlaceholder(50);
-    actualizaValoresUI(placeholder, false);
-    timer.start();
-
-    save();
-    return true;
-}
-
-
 
 //Genera el sudoku usando backtracking
 //#####################
-function generaSudoku(num=0,y=0,columnas=[[]],cuadros=[[[]]],otros=[[[]]],sudokuNuevo=sudoku){
+export function generaSudoku(num=0,y=0,columnas=[[]],cuadros=[[[]]],otros=[[[]]],sudokuNuevo=sudoku){
     
     if(num >= 9)
         return sudokuNuevo;
@@ -167,7 +82,7 @@ function generaRandom(columnasDisp){
 
 //Genera el placeholder
 //#####################
-function generaPlaceholder(n){
+export function generaPlaceholder(n){
     let list = [];
     let x,y;
     if(n>60)
@@ -224,7 +139,7 @@ function revisa(x,y){
     return value;
 } 
 
-function sudokuCorrecto(){
+export function sudokuCorrecto(){
     limpiaEstilosPeses();
     let value=true;
     for(let y=0;y<9;y++){

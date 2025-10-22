@@ -1,4 +1,4 @@
-function actualizaValoresUI(ref, bloquear=false){
+export function refreshUI(ref, bloquear=false){
     let i;
     for(let y=0; y<9; y++)
         for(let x=0; x<9; x++){
@@ -20,7 +20,7 @@ function resalta(n){
         }
 }
 
-function limpiaEstilosPeses(){
+export function clearStyleP(){
     for(let x=0; x<81; x++){
             peses[x].classList.remove("danger");
             peses[x].classList.remove("warning");
