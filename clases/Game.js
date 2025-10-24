@@ -156,5 +156,9 @@ export class Game {
             elem.classList.contains(param)? elem.classList.remove(param) : elem.classList.add(param);
         } 
     }
+
+    printSudoku(){
+        this.refreshUI(this.sudoku.solution.data);
+    }
 }
 

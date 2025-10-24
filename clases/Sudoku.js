@@ -23,9 +23,9 @@ export class Sudoku{
     }
 
     generateSudoku(){
-        this.solution.restart();
-        this.placeholder.restart();
-        this.userInput.restart();
+        this.solution = new Matrix();
+        this.placeholder = new Matrix();
+        this.userInput = new Matrix();
 
         this.generateSolution();
         this.generaPlaceholder(60);
@@ -58,8 +58,6 @@ export class Sudoku{
                 otros.pop();
                 columnas.pop();
                 num--;
-                cuadros[num].pop();
-                otros[num].pop();
                 return this.generateSolution(num, 8, columnas,cuadros,otros,sudokuNuevo)
             }
 
@@ -109,7 +107,7 @@ export class Sudoku{
     //Auxiliar method for "generateSolution". 
     generateRandomNum(AvalaibleColumns){
         if(AvalaibleColumns.length<1)
-            return null
+            return null;
         return AvalaibleColumns[Math.floor(Math.random()*AvalaibleColumns.length)];
     }
 
@@ -134,39 +132,43 @@ export class Sudoku{
         return list;
     };
 
-    checkRowCol(x, y, correctNum, value){
+    checkRowCol(x, y, num, value){
         for(let i=0;i<9;i++){    
-            if((x != i) && (correctNum == this.solution.data[y][i]))
+            if((x != i) && (num == this.solution.data[y][i]))
                 value = false
               
-            if((y != i) && (correctNum == this.solution.data[i][x]))
-                value =false;
+            if((y != i) && (num == this.solution.data[i][x]))
+                value = false;
         }
         return value;
     } 
 
-    checkSquare(xStart, yStart, correctNum, value){
-        
-        for(let y = yStart; y < yStart  + 3; y++)
-            for(let x = xStart; x < xStart + 3; x++)
-                if((xStart != x || yStart != y) && this.solution.data[y][x] == correctNum )
+    checkSquare(xStart, yStart, num, value){
+        let xStartS = (Math.floor(xStart/3)) * 3;
+        let yStartS = (Math.floor(yStart/3)) * 3;
+
+        for(let y = yStartS; y < yStartS + 3; y++){
+            for(let x = xStartS; x < xStartS + 3; x++){
+                if((xStart != x || yStart != y) && this.solution.data[y][x] == num ){
                     value = false;
+                }
+            }
+        }
         return value;
     }
 
-    check(x, y, num=this.solution.data[y][x], value=true){
-        let xStartS = (Math.floor(x/3))*3;
-        let yStartS = (Math.floor(y/3))*3;
-
-        return (this.checkRowCol(x,y,num,value) && this.checkSquare(xStartS,yStartS,num,value));
+    check(x, y, num, value){
+        return (this.checkRowCol(x, y, num, value) && this.checkSquare(x, y,num,value));
     }
 
     checkSudoku(){
-         let value=true;
+        let value=true;
 
-        for(let y=0; y<9; y++)
-            for(let x=0; x<9; x++)
-                value = value && (this.check(x, y));
+        for(let y = 0; y < 9; y++){
+            for(let x=0; x < 9; x++){
+                value = value && (this.check(x, y, this.solution.data[y][x], true));
+            }
+        }
     
         return value;
 
