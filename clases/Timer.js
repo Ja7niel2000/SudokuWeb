@@ -1,4 +1,4 @@
-class Cronometro{
+export class Timer{
 
     constructor(elementId="timer", seconds=0, minutes=0, hours=0){
         this.time = "00:00:00";
@@ -17,19 +17,14 @@ class Cronometro{
         this.active=true;
         this.interval = setInterval(()=>{
             this.setTime();
-
             this.element.innerText=this.time;
-
         },1000);
     }
 
     stop(){
         if(!this.active) return;
         this.active=false;
-    }
-
-    getTime(){
-        return this.time;
+        clearInterval(this.interval);
     }
 
     setTime(){
@@ -40,10 +35,10 @@ class Cronometro{
                 this.hours++;
             }
         }
-        this.une();
+        this.join();
     }
 
-    une(){
+    join(){
         this.time =`${this.hours>9 ? this.hours:"0"+this.hours}:${this.minutes > 9 ? this.minutes : "0" + this.minutes }:${this.seconds > 9 ? this.seconds : "0" + this.seconds }`
     }
 }

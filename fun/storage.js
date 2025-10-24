@@ -1,17 +1,25 @@
-function load(){
-    items = JSON.parse(localStorage.getItem(KEY));
-    sudoku = items[0];
-    placeholder = items[1];
-    userInput = items[2];
-    timer.seconds=items[3]["seconds"];
-    timer.minutes=items[3]["minutes"];
-    timer.hours=items[3]["hours"];
-};
+export function load(game){
+    let prevGame = JSON.parse(localStorage.getItem(game.KEY));
+    console.log(prevGame.sudoku);
+    game.sudoku.solution = prevGame["sudoku"]["solution"];
+    game.sudoku.placeholder = prevGame["sudoku"]["placeholder"];
+    game.sudoku.userInput = prevGame["sudoku"]["userInput"];
 
-function save(){
-    localStorage.setItem(KEY,JSON.stringify([sudoku,placeholder,userInput,timer]))
+    
+    game.timer.seconds = prevGame["timer"]["seconds"];
+    game.timer.minutes = prevGame["timer"]["minutes"];
+    game.timer.hours = prevGame["timer"]["hours"];
+    return game;
 }
 
-function clearStorage(){
+export function check(KEY){
+    return localStorage.getItem(KEY)!=null
+}
+
+export function save(game){
+    localStorage.setItem(game.KEY, JSON.stringify(game))
+}
+
+export function clearStorage(){
     localStorage.clear();
 }
