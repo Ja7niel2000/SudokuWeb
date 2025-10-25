@@ -6,7 +6,7 @@ export class Sudoku{
         this.placeholder = new Matrix();
         this.userInput = new Matrix();
     }
-    
+
     verifyUserInput(){
         let value=true;
 
@@ -23,80 +23,66 @@ export class Sudoku{
     }
 
     generateSudoku(){
-        this.solution = new Matrix();
+        let newSolution = new Matrix ();
         this.placeholder = new Matrix();
+
+        this.solution.data = this.generateSolution(newSolution.data);
+        this.placeholder.data = this.generaPlaceholder(60);
         this.userInput = new Matrix();
 
-        this.generateSolution();
-        this.generaPlaceholder(60);
     }
 
-    //Metódo que crea la solución.
-    generateSolution(num=0,y=0,columnas=[[]],cuadros=[[[]]],otros=[[[]]],sudokuNuevo=this.solution.data){
-        
+    //Method that creates a solution.
+    //This method must not receive nothing in the params
+    //Returns a 9x9 matrix
+    generateSolution(newSudoku = new Matrix().data, num = 0, y = 0, columns = [[]], bloquedColumns = [[[]]]){
+        //base case
         if(num >= 9)
-            return sudokuNuevo;
+            return newSudoku;
 
+        //base case
         if(y >= 9){
-            num++;
-            cuadros.push([[]]);
-            otros.push([[]]);
-            columnas.push([]);
-            return this.generateSolution(num,0,columnas,cuadros,otros,sudokuNuevo);
+            bloquedColumns.push([[]]);
+            columns.push([]);
+            return this.generateSolution(newSudoku, num + 1, 0, columns, bloquedColumns);
         }
 
-        if(columnas[num][y]!=undefined){
-            let equis=columnas[num].pop();
-            sudokuNuevo[y][equis]=0;
-            otros[num][y].push(equis);
+        if(columns[num][y] != undefined){
+            let ex = columns[num].pop();
+            newSudoku[y][ex] = 0;
+            bloquedColumns[num][y].push(ex);
         }
 
-        let columnasD = this.AvalaibleColumns(y,[...columnas[num]], [...cuadros[num][y]], otros[num][y],sudokuNuevo);
-        if(columnasD.length==0){
-            if(y==0){
-                cuadros.pop();
-                otros.pop();
-                columnas.pop();
-                num--;
-                return this.generateSolution(num, 8, columnas,cuadros,otros,sudokuNuevo)
+        let AvColumns = this.AvalaibleColumns(newSudoku, y, columns[num], bloquedColumns[num][y]);
+        if(AvColumns.length == 0){
+            if(y == 0){
+                bloquedColumns.pop();
+                columns.pop();
+                return this.generateSolution(newSudoku, num - 1, 8, columns, bloquedColumns)
             }
 
-            cuadros[num].pop();
-            otros[num].pop();
-            return this.generateSolution(num, y-1, columnas, cuadros, otros, sudokuNuevo);
+            bloquedColumns[num].pop();
+            return this.generateSolution(newSudoku, num, y - 1, columns, bloquedColumns);
         }
 
-        let random = this.generateRandomNum(columnasD);
+        let random = AvColumns[Math.floor(Math.random() * AvColumns.length)];
+        bloquedColumns[num].push([]);
+        this.addBloquedSquares(y, bloquedColumns[num], random);
 
-        //Calcula cuales de las columnas de los cuadros se va a ignorar
-        cuadros[num].push([]);
-        if (y!=2 && y<5){
-            let square=Math.floor(random/3)*3;
-            for(let s=square;s<square+3;s++){
-                if(s==random)
-                    continue;
-                cuadros[num][y+1].push(s);
-            }
-            if(y==1 || y==4 || y==7)
-                cuadros[num][y+1].push(...cuadros[num][y].filter(x =>!cuadros[num][y+1].includes(x)));
-        }
-
-        sudokuNuevo[y][random]=num+1
-        otros[num].push([]);
-        columnas[num].push(random);
-        return this.generateSolution(num, y+1, columnas, cuadros, otros, sudokuNuevo);
+        newSudoku[y][random] = num + 1;
+        columns[num].push(random);
+        return this.generateSolution(newSudoku, num, y + 1, columns, bloquedColumns);
     }
 
     //Auxiliar method for "generateSolution".
-    AvalaibleColumns(y,columnas,cuadro,otros,sudokuNuevo){
+    AvalaibleColumns(newSudoku, y, columns, bloquedColumns){
 
-        if(columnas.length>=9)
+        if(columns.length >= 9)
             return [];
 
-        let list=[];
-        for(let i=0;i<9;i++){
-                
-            if(columnas.includes(i) || cuadro.includes(i) || sudokuNuevo[y][i]!=0 || otros.includes(i) )
+        let list = [];
+        for(let i = 0; i < 9; i++){
+            if(columns.includes(i) || bloquedColumns.includes(i) || newSudoku[y][i] != 0)
                 continue;
             list.push(i);
         }
@@ -104,11 +90,17 @@ export class Sudoku{
         return list;    
     }
 
-    //Auxiliar method for "generateSolution". 
-    generateRandomNum(AvalaibleColumns){
-        if(AvalaibleColumns.length<1)
-            return null;
-        return AvalaibleColumns[Math.floor(Math.random()*AvalaibleColumns.length)];
+    addBloquedSquares(y, bloquedColumns, random){   
+        if (y != 2 && y < 5){
+            let square = Math.floor(random / 3) * 3;
+            for(let s = square; s < square + 3; s++){
+                if(s == random)
+                    continue;
+                bloquedColumns[y+1].push(s);
+            }
+            if(y == 1 || y == 4 || y == 7)
+                bloquedColumns[y+1].push(...bloquedColumns[y].filter(x =>! bloquedColumns[y+1].includes(x)));
+        }
     }
 
     //Genera un placeholder
