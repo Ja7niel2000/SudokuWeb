@@ -7,32 +7,34 @@ export class Game {
         this.sudoku = new Sudoku();
         this.timer = new Timer();
         this.inGame = false;
-        this.KEY="sudoku"
+        this.KEY = "sudoku"
         this.selectedBox = 0;
         this.boxes = [];
+        this.init();
     }
     
     newGame(){
         if(this.inGame){
             if(!confirm("Quieres reiniciar?"))
                 return;
+            this.timer.stop()
+            this.timer = new Timer();
             clearStorage();
         }
 
         this.clearStyleP();
         this.inGame = true;
-        let message="Ya hay un sudoku en progreso, quieres continuar con el antiguo?"
+        let message = "Ya hay un sudoku en progreso, quieres continuar con el antiguo?"
         if(check(this.KEY) && confirm(message)){
             load(this);
-            this.refreshUI(this.sudoku.userInput.data);
-            this.refreshUI(this.sudoku.placeholder.data, true);
+            this.refreshUI(this.sudoku.userInput);
+            this.refreshUI(this.sudoku.placeholder, true);
             this.timer.start();
             return false;
         }
 
         this.sudoku = new Sudoku();
-        this.sudoku.generateSudoku();
-        this.refreshUI(this.sudoku.placeholder.data, true);
+        this.refreshUI(this.sudoku.placeholder, true);
         this.timer.start();
         save(this);
         return true;
@@ -41,6 +43,7 @@ export class Game {
     endGame(){
         if(!this.sudoku.verifyUserInput()) return alert("Sudoku incorrecto");
         this.timer.stop();
+        this.inGame = false;
         alert(`Juego completado en ${this.timer.time}`);
         clearStorage()
     }
@@ -75,14 +78,15 @@ export class Game {
         this.addEvents();
     }
 
+    //UI
     selected(i,e){
         this.boxes[this.selectedBox].classList.remove("selected");
-        this.selectedBox=i;
+        this.selectedBox = i;
         this.boxes[this.selectedBox].classList.add("selected");
         document.getElementById("hiddenInput").focus();
     }
 
-    refreshUI(ref, bloquear=false){
+    refreshUI(ref, bloquear = false){
         let i;
         for(let y=0; y<9; y++)
             for(let x=0; x<9; x++){
@@ -90,8 +94,8 @@ export class Game {
                     continue;
 
                 i = x + (9 * y);
-                this.boxes[i].innerText=ref[y][x];
-                if(bloquear==true)
+                this.boxes[i].innerText = ref[y][x];
+                if(bloquear == true)
                     this.boxes[i].classList.add("bloqued");        
             }
     }
@@ -101,20 +105,28 @@ export class Game {
                 this.boxes[x].classList.remove("danger");
                 this.boxes[x].classList.remove("warning");
                 this.boxes[x].classList.remove("bloqued");
+                this.boxes[x].innerText=0;
         }
     }
 
+    togglevisible(e, elem, param ){  
+        if(elem!=null){
+            elem.classList.contains(param)? elem.classList.remove(param) : elem.classList.add(param);
+        } 
+    }
+
+    //Events
     addEvents(){
         document.getElementById('playB1').addEventListener("click", (e) => this.togglevisible(e,document.getElementById("menuP"),"visible"));
         document.getElementById("controls").addEventListener("click",(e)=>{
 
-            if(e.target.id=="verificar" && this.inGame)
+            if(e.target.id == "verificar" && this.inGame)
                 this.endGame();
 
-            else if(e.target.id=="genera")
+            else if(e.target.id == "genera")
                 this.newGame();
 
-            else if(e.target.id=="playB2")
+            else if(e.target.id == "playB2")
                 this.togglevisible(e,document.getElementById("menuP"),"visible");
             
         })
@@ -125,7 +137,7 @@ export class Game {
             if ((e.key == "Backspace" ||(parseInt(e.key)>=0 && parseInt(e.key)<10)) && !this.boxes[this.selectedBox].classList.contains('bloqued')){
                 this.boxes[this.selectedBox].textContent = e.key=="Backspace" ? 0 : parseInt(e.key);
                 if(this.inGame){
-                    this.sudoku.userInput.data[Math.floor(this.selectedBox/9)][this.selectedBox%9] = parseInt(e.key);
+                    this.sudoku.userInput[Math.floor(this.selectedBox/9)][this.selectedBox%9] = parseInt(e.key);
                     save(this);
                 }
             }            
@@ -151,14 +163,9 @@ export class Game {
 
     }
 
-    togglevisible(e, elem, param ){  
-        if(elem!=null){
-            elem.classList.contains(param)? elem.classList.remove(param) : elem.classList.add(param);
-        } 
-    }
-
+    //others
     printSudoku(){
-        this.refreshUI(this.sudoku.solution.data);
+        this.refreshUI(this.sudoku.solution);
     }
 }
 

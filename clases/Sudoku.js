@@ -1,10 +1,20 @@
-import { Matrix } from "./Matrix.js";
-
 export class Sudoku{
     constructor(){
-        this.solution = new Matrix()
-        this.placeholder = new Matrix();
-        this.userInput = new Matrix();
+        this.solution = this.generateSolution();
+        this.placeholder = this.generaPlaceholder();
+        this.userInput = this.createGrid(); 
+    }
+
+    createGrid(){
+        let grid = [];
+        for(let y = 0; y < 9; y++){
+            grid.push([]);
+            for(let x = 0 ; x < 9; x++){
+                grid[y].push(0);
+            }
+        }
+        return grid;
+
     }
 
     verifyUserInput(){
@@ -13,29 +23,19 @@ export class Sudoku{
         for(let y=0; y<9; y++){
             for(let x=0; x<9; x++){
                 
-                if(this.placeholder.data[y][x] != 0)
+                if(this.placeholder[y][x] != 0)
                     continue;
-                value = value && (this.userInput.data[y][x]==this.solution.data[y][x]);
+                value = value && (this.userInput[y][x]==this.solution[y][x]);
             }
         }
         console.log(value);
         return value;
     }
 
-    generateSudoku(){
-        let newSolution = new Matrix ();
-        this.placeholder = new Matrix();
-
-        this.solution.data = this.generateSolution(newSolution.data);
-        this.placeholder.data = this.generaPlaceholder(60);
-        this.userInput = new Matrix();
-
-    }
-
     //Method that creates a solution.
     //This method must not receive nothing in the params
-    //Returns a 9x9 matrix
-    generateSolution(newSudoku = new Matrix().data, num = 0, y = 0, columns = [[]], bloquedColumns = [[[]]]){
+    //Returns a 9x9 grid
+    generateSolution(newSudoku = this.createGrid(), num = 0, y = 0, columns = [[]], bloquedColumns = [[[]]]){
         //base case
         if(num >= 9)
             return newSudoku;
@@ -90,6 +90,7 @@ export class Sudoku{
         return list;    
     }
 
+    //Auxiliar method for "generateSolution"
     addBloquedSquares(y, bloquedColumns, random){   
         if (y != 2 && y < 5){
             let square = Math.floor(random / 3) * 3;
@@ -104,32 +105,50 @@ export class Sudoku{
     }
 
     //Genera un placeholder
-    //#####################
-    generaPlaceholder(n){
+    generaPlaceholder(n = 60, placeholder = this.createGrid()){
         let list = [];
         let x, y;
         if(n > 60)
             return false;
+
         let random = 0;
 
         while(list.length<n){
-            random=Math.floor(Math.random()*81);
+            random = Math.floor(Math.random() * 81);
             if(list.includes(random))
                 continue;
             list.push(random);
-            x=random%9
-            y=Math.floor(random/9);
-            this.placeholder.data[y][x]=this.solution.data[y][x];
+            x = random % 9
+            y = Math.floor(random / 9);
+            placeholder[y][x] = this.solution[y][x];
         }
-        return list;
+        return placeholder;
     };
+
+    //Methods for testing the sudokus
+    checkSudoku(){
+        let value=true;
+
+        for(let y = 0; y < 9; y++){
+            for(let x=0; x < 9; x++){
+                value = value && (this.check(x, y, this.solution[y][x], true));
+            }
+        }
+    
+        return value;
+
+    }
+
+    check(x, y, num, value){
+        return (this.checkRowCol(x, y, num, value) && this.checkSquare(x, y,num,value));
+    }
 
     checkRowCol(x, y, num, value){
         for(let i=0;i<9;i++){    
-            if((x != i) && (num == this.solution.data[y][i]))
+            if((x != i) && (num == this.solution[y][i]))
                 value = false
               
-            if((y != i) && (num == this.solution.data[i][x]))
+            if((y != i) && (num == this.solution[i][x]))
                 value = false;
         }
         return value;
@@ -141,29 +160,11 @@ export class Sudoku{
 
         for(let y = yStartS; y < yStartS + 3; y++){
             for(let x = xStartS; x < xStartS + 3; x++){
-                if((xStart != x || yStart != y) && this.solution.data[y][x] == num ){
+                if((xStart != x || yStart != y) && this.solution[y][x] == num ){
                     value = false;
                 }
             }
         }
         return value;
     }
-
-    check(x, y, num, value){
-        return (this.checkRowCol(x, y, num, value) && this.checkSquare(x, y,num,value));
-    }
-
-    checkSudoku(){
-        let value=true;
-
-        for(let y = 0; y < 9; y++){
-            for(let x=0; x < 9; x++){
-                value = value && (this.check(x, y, this.solution.data[y][x], true));
-            }
-        }
-    
-        return value;
-
-    }
-
 }
