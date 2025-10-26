@@ -23,7 +23,7 @@ export class Timer{
 
     stop(){
         if(!this.active) return;
-        this.active=false;
+        this.active = false;
         clearInterval(this.interval);
     }
 

@@ -1,11 +1,9 @@
 export function load(game){
     let prevGame = JSON.parse(localStorage.getItem(game.KEY));
-    console.log(prevGame.sudoku);
     game.sudoku.solution = prevGame["sudoku"]["solution"];
     game.sudoku.placeholder = prevGame["sudoku"]["placeholder"];
     game.sudoku.userInput = prevGame["sudoku"]["userInput"];
 
-    
     game.timer.seconds = prevGame["timer"]["seconds"];
     game.timer.minutes = prevGame["timer"]["minutes"];
     game.timer.hours = prevGame["timer"]["hours"];
