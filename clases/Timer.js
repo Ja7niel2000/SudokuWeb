@@ -1,6 +1,6 @@
 export class Timer{
 
-    constructor(elementId="timer", seconds=0, minutes=0, hours=0){
+    constructor(elementId = "timer", seconds = 0, minutes = 0, hours = 0){
         this.time = "00:00:00";
 
         this.seconds = seconds;
@@ -13,12 +13,12 @@ export class Timer{
     }
    
     start(){
-        if(this.active || this.element==null) return;
-        this.active=true;
+        if(this.active || this.element == null) return;
+        this.active = true;
         this.interval = setInterval(()=>{
             this.setTime();
-            this.element.innerText=this.time;
-        },1000);
+            this.element.innerText = this.time;
+        }, 1000);
     }
 
     stop(){

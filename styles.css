@@ -10,6 +10,9 @@
     --color-border1:#01ffe6;
 
     --color-active:#01ffe6;
+    --color-selected-grid:#3b447a;
+    /* #7a3b3b */
+
     --color-bg:#2f2f2f;
     /* #5d1717 */
     --color-bg-menu:#0b111a;
@@ -104,9 +107,39 @@ main:hover{
 }
 
 .columns{
-    display: block;
+    display: flex;
+    background-color: var(--color-Cuadricula);
+    position:relative;
+    border:1px solid var(--color-shadow);
+    cursor: pointer;
+    min-height: 60px;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+
+}
+
+.placeholder{
+    position: absolute;
+    z-index: 11;
+    width: 100%;
+    font-size: 0.9em;
     background-color: var(--color-Cuadricula);
 }
+
+.r{}
+
+.c{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.c p{
+    margin:0;
+    min-height: 20px;
+
+}
+
 
 #controls{
     margin-top: 25px;
@@ -121,28 +154,26 @@ main:hover{
     
 }
 
-.peses:hover{
-    transform: scale(1.5);
-    transition: 0.01s;
-    cursor: pointer;
-    
-}
-
 .peses{
     font-size:1.4rem;
     margin: 0;
-    padding: 14px;
+    padding: 0 14px;
     text-align: center;
-    background-color: var(--color-Cuadricula);
+    position: relative;
+    z-index: 10;
+    height: 100%;
 }
 
 .selected{
-    transform: scale(1.5);
     color:var(--color-active);
-    animation-name: activo;
+    /* animation-name: activo;
     animation-duration: 1s;
-    animation-iteration-count: infinite;
-    background-color: #00000000 !important;
+    animation-iteration-count: infinite; */
+    background-color: var(--color-selected-grid) !important;
+}
+
+.selected > .placeholder {
+    background-color: var(--color-selected-grid) !important    ;
 }
 
 .bloqued{
@@ -159,15 +190,26 @@ main:hover{
     }
     
 }
-.border-rigth{
+.border-right{
     border-right:1px solid var(--color-cuadroG) !important;
 }
+
+.border-left{
+    border-left:1px solid var(--color-cuadroG) !important;
+}
+
 .border-bottom{
     border-bottom:1px solid var(--color-cuadroG) !important;
 }
+
+.border-top{
+    border-top:1px solid var(--color-cuadroG) !important;
+}
+
 .danger{
     background-color: #f00;
 }
+
 .warning{
     background-color: bisque;
 }
@@ -179,5 +221,9 @@ main:hover{
     height: 100%;
     opacity: 0;
     z-index: -1;
-
 }
+
+.display-none{
+    display: none;
+}
+

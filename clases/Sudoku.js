@@ -99,7 +99,7 @@ export class Sudoku{
                     continue;
                 bloquedColumns[y+1].push(s);
             }
-            if(y == 1 || y == 4 || y == 7)
+            if(y == 1 || y == 4)
                 bloquedColumns[y+1].push(...bloquedColumns[y].filter(x =>! bloquedColumns[y+1].includes(x)));
         }
     }
