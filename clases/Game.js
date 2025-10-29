@@ -117,7 +117,6 @@ export class Game {
         this.boxes[this.selectedBox].classList.remove("selected");
         this.selectedBox = i;
         this.boxes[this.selectedBox].classList.add("selected");
-        document.getElementById("hiddenInput").focus();
     }
 
     refreshUI(ref, bloquear = false){
@@ -169,6 +168,7 @@ export class Game {
 
     //Events
     addEvents(){
+    
         document.getElementById('playB1').addEventListener("click", (e) => this.togglevisible(e,document.getElementById("menuP"),"visible"));
         document.getElementById("controls").addEventListener("click",(e)=>{
 
@@ -186,50 +186,41 @@ export class Game {
 
         });
 
+        let keyboardContainer = document.getElementById("keyboardContainer");
+        keyboardContainer.addEventListener("click", (e) => {
+            if(e.target.id == "keyboardButton" ){
+                keyboardContainer.classList.contains("keyboard-visible") ? keyboardContainer.classList.remove("keyboard-visible") : keyboardContainer.classList.add("keyboard-visible");
+            }
+
+            if(e.target.classList.contains("keyboardColumn")){
+                if(e.target.innerText == 0)
+                    this.checkAndEdit("toggleGrid");
+                else
+                    this.checkAndEdit(e.target.innerText);
+            }
+                
+        });
+
         window.addEventListener("keydown",(e) => 
         {
-            if(!this.inGame )return;
-            
-            if( !this.boxes[this.selectedBox].classList.contains('bloqued')){
-                if(((e.key == "Backspace" || e.key == 0) || this.boxes[this.selectedBox].lastChild.textContent == e.key) && this.mainGrid == 1 ){
-                    this.boxes[this.selectedBox].lastChild.textContent = 0;
-                    this.boxes[this.selectedBox].firstChild.classList.remove("display-none")
-                    this.sudoku.userInput[Math.floor(this.selectedBox/9)][this.selectedBox%9] = 0;
-                    save(this);
-                }
-
-                else if (parseInt(e.key) > 0 && parseInt(e.key)<10 ){
-                    
-                    if(this.mainGrid == 1){
-                        this.boxes[this.selectedBox].lastChild.textContent = e.key;
-                        if(!this.boxes[this.selectedBox].firstChild.classList.contains("display-none"))
-                            this.boxes[this.selectedBox].firstChild.classList.add("display-none");
-                        this.sudoku.userInput[Math.floor(this.selectedBox/9)][this.selectedBox%9] = parseInt(e.key);
-                        save(this);
-                    }
-                    else if (this.mainGrid == 0){
-                        this.boxes[this.selectedBox].lastChild.textContent = 0;
-                        this.boxes[this.selectedBox].firstChild.classList.remove("display-none");
-                        let text = this.boxes[this.selectedBox].firstChild.firstChild.children[Math.floor((e.key - 1) / 3)].children[(e.key - 1) % 3].innerText
-                        this.boxes[this.selectedBox].firstChild.firstChild.children[Math.floor((e.key - 1) / 3)].children[(e.key - 1) % 3].innerText  = text == "" ? e.key:""
-                    }
-
-                }
-            }
+            this.checkAndEdit(e.key);
 
             if(e.key == "Shift"){
                 this.toggleGrid();
             }            
 
             else if(e.key == "ArrowUp"){
+                e.preventDefault();
                 if(this.selectedBox - 9 < 0)
                     this.selected (81+(this.selectedBox-9),e)  ;  
                 else
                     this.selected(Math.abs(this.selectedBox - 9)%81, e);
                 }
 
-            else if(e.key=="ArrowDown")
+            else if(e.key=="ArrowDown"){
+                e.preventDefault();
                 this.selected((this.selectedBox + 9)%81, e);
+            }
 
             else if(e.key=="ArrowLeft"){
                 if(this.selectedBox==0)
@@ -242,6 +233,37 @@ export class Game {
                 this.selected((this.selectedBox + 1)%81, e);
         });
 
+    }
+
+    checkAndEdit(param){
+        if(!this.inGame )return;
+        if(param == "toggleGrid") return this.toggleGrid();
+        if( !this.boxes[this.selectedBox].classList.contains('bloqued')){
+            if(((param == "Backspace" || param == 0) || this.boxes[this.selectedBox].lastChild.textContent == param) && this.mainGrid == 1 ){
+                this.boxes[this.selectedBox].lastChild.textContent = 0;
+                this.boxes[this.selectedBox].firstChild.classList.remove("display-none")
+                this.sudoku.userInput[Math.floor(this.selectedBox/9)][this.selectedBox%9] = 0;
+                save(this);
+            }
+
+            else if (parseInt(param) > 0 && parseInt(param)<10 ){
+                
+                if(this.mainGrid == 1){
+                    this.boxes[this.selectedBox].lastChild.textContent = param;
+                    if(!this.boxes[this.selectedBox].firstChild.classList.contains("display-none"))
+                        this.boxes[this.selectedBox].firstChild.classList.add("display-none");
+                    this.sudoku.userInput[Math.floor(this.selectedBox/9)][this.selectedBox%9] = parseInt(param);
+                    save(this);
+                }
+                else if (this.mainGrid == 0){
+                    this.boxes[this.selectedBox].lastChild.textContent = 0;
+                    this.boxes[this.selectedBox].firstChild.classList.remove("display-none");
+                    let text = this.boxes[this.selectedBox].firstChild.firstChild.children[Math.floor((param - 1) / 3)].children[(param - 1) % 3].innerText
+                    this.boxes[this.selectedBox].firstChild.firstChild.children[Math.floor((param - 1) / 3)].children[(param - 1) % 3].innerText  = text == "" ? param:""
+                }
+
+            }
+        }
     }
 
     //others
